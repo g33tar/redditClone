@@ -8,19 +8,25 @@ app.controller("redditController", function($scope){
     $scope.author = "";
     $scope.image = "";
     $scope.description = "";
-    }
-    $scope.upVote = function(){
-      $scope.vote++;
-    }
-    $scope.downVote = function(){
-      $scope.vote--;
-    }
-    $scope.vote = 0;
     $scope.date = Date.now();
-  //   $scope.comments = [];
-  //   $scope.addComments = function(){
-  //   $scope.comments.push({user: $scope.user, comments: $scope.comments})
-  //   $scope.user = "";
-  //   $scope.comments = "";
-  // }
+    }
+})
+app.controller("commentController", function($scope){
+  $scope.commentsList = [];
+  $scope.addComments = function(){
+      console.log("hello");
+    $scope.commentsList.push({commentAuthor: $scope.commentAuthor, commentText: $scope.commentText})
+    $scope.commentAuthor = "";
+    $scope.commentText = "";
+  }
+})
+
+app.controller("voteController", function($scope){
+  $scope.upVote = function(){
+    $scope.vote++;
+  }
+  $scope.downVote = function(){
+    $scope.vote--;
+  }
+  $scope.vote = 0;
 })

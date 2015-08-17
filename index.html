@@ -20,7 +20,7 @@
     </select>
   </nav>
 </header>
-    <form ng-show="addPost" name="form" novalidate>
+    <form ng-show="addPost" class="submitPostDiv" name="form" novalidate>
       <label for="title">Title</label><br><br>
       <input type="text" name="title" ng-model="title" placeholder="Title" required>
       <br>
@@ -37,54 +37,58 @@
       <input type="textarea" name="description" ng-model="description" placeholder="Description" required>
       <br>
       <br>
-      <input class="submit" ng-disabled="form.$invalid" type="submit" ng-click="addPosts()" value="Add Post">
-      <!--add =true so doesn't post until complete. But still doesn't post then.  -->
+      <input class="submitPostButton" ng-disabled="form.$invalid" type="submit" ng-click="addPosts(); addPost = false;" value="Add Post">
     </form>
 
-  <main ng-repeat="post in posts">
+  <main ng-repeat="post in posts | filter:search">
     <div class="posts">
       <br>
       <div class="column1">
       <img style="height:150px" src="{{post.image}}" alt="">
       </div>
       <div class="column2">
-      <h2>{{post.title}} | <i ng-click="upVote()" class="fa fa-arrow-up" style='cursor:pointer'></i><i ng-click="downVote()" class="fa fa-arrow-down" style='cursor:pointer'></i><span ng-class="{green: vote>0, red:vote<0}">{{vote}}</span></h2>
+        <div ng-controller="voteController">
+          <h2>{{post.title}} | <i ng-click="upVote()" class="fa fa-arrow-up" style='cursor:pointer'></i><i ng-click="downVote()" class="fa fa-arrow-down" style='cursor:pointer'></i><span ng-class="{green: vote>0, red:vote<0}">{{vote}}</span></h2>
+        </div>
       <h4>{{post.author}}</h4>
       <p>{{post.description}}</p>
       <br>
       <br>
-      <footer>
-        <span><i class="fa fa-calendar"></i>{{date}} </span> |
-        <span><i class="fa fa-commenting"></i><a href="" ng-click="showComments = ! showComments">Comments</a></span> |
-        <span><i class="fa fa-pencil"></i><a href="" <a href="" ng-click="addComments = ! addComments">Add a comment</a></span>
-      </footer>
+        <div ng-controller="commentController">
+          <footer>
+            <span><i class="fa fa-calendar"></i><time>Posted on {{post.date| date}}</time> </span> |
+            <span><i class="fa fa-commenting">##</i><a href="" ng-click="showComments = ! showComments">Comments</a></span> |
+            <span><i class="fa fa-pencil"></i><a href="" ng-click="addComment = ! addComment">Add a comment</a></span>
+          </footer>
 
-      <form class="commentForm" ng-show="addComments">
-        <label for="user">Author</label>
-        <input type="text" id="user" ng-model="user" placeholder="Author">
-        <br>
-        <br>
-        <label for="comments">Text</label>
-        <input type="text" id="comments" ng-model="comments" placeholder="comment text">
-        <br>
-        <br>
-        <input class="submit" type="submit" ng-click="addComments()" value="Add Post">
-      </form>
+          <form ng-init="addComment=false" ng-show="addComment" name="form" novalidate>
+            <label for="commentAuthor">Author</label>
+            <input type="text" ng-model="commentAuthor" placeholder="Author" required>
+            <br>
+            <br>
+            <label for="commentText">Text</label>
+            <input type="text" ng-model="commentText" placeholder="comment text" required>
+            <br>
+            <br>
+            <input type="submit"  ng-disabled="form.$invalid" ng-click="addComments(); addComment = false; showComments = true" name="submit" value="Add Comment">
+          </form>
 
-      <div ng-repeat="comment in comments" ng-click="showComments()">
-        <p><strong>{{user}} </strong> <span>{{comments}}</span></p>
-        <br>
+          <div class="comments" ng-repeat="comment in commentsList" ng-show="showComments">
+            <p><strong>{{comment.commentAuthor}} </strong> {{comment.commentText}}</p>
+          </div>
+            <br>
       </div>
+      </div>
+
      </div>
     </div>
 
   </main>
 
-
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.js" charset="utf-8"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="app.js"></script>
   <script src="moment.js" charset="utf-8"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 </body>
 </html>
