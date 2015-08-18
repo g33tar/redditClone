@@ -1,14 +1,39 @@
-var app = angular.module("redditApp", []);
+var app = angular.module("redditApp", ['angularMoment', 'ngAnimate']);
+
 
 app.controller("redditController", function($scope){
-    $scope.posts = [];
+    $scope.posts = $scope.posts = [
+    {
+      title: 'Tango',
+      author: 'Katie Whipple',
+      image: 'http://i.ytimg.com/vi/f8csv4xGtTo/maxresdefault.jpg',
+      description: 'If it doesn\'t challenge you, it doesn\'t change you.',
+      date: 1439450850667,
+    },
+    {
+      title: 'Swing It!',
+      author: 'Darren Folks',
+      image: 'https://s-media-cache-ak0.pinimg.com/236x/57/31/a8/5731a8b12432816d9da9561a3a1f33c5.jpg',
+      description: 'It don\'t mean a thang, if it ain\'t got that swing!',
+      date: 1439330950665,
+    },
+    {
+      title: 'Blues!',
+      author: 'Tara',
+      image: 'http://www.evrimgallery.com/Portland-Wedding-Blog/wp-content/uploads/2009/05/lindy-exchange-9.jpg',
+      description: 'Life is like Blues...sad, sensual, sexy, violent and quiet.',
+      date: 1439300950665,
+    },
+  ];
     $scope.addPosts = function(){
-    $scope.posts.push({title: $scope.title, author: $scope.author, image: $scope.image, description: $scope.description})
-    $scope.title = "";
-    $scope.author = "";
-    $scope.image = "";
-    $scope.description = "";
-    $scope.date = Date.now();
+      $scope.vm = this;
+      $scope.vm.time = new Date();
+      $scope.date = $scope.vm.time;
+      $scope.posts.push({title: $scope.title, author: $scope.author, image: $scope.image, description: $scope.description, date: $scope.date})
+      $scope.title = "";
+      $scope.author = "";
+      $scope.image = "";
+      $scope.description = "";
     }
 })
 app.controller("commentController", function($scope){
@@ -23,10 +48,10 @@ app.controller("commentController", function($scope){
 
 app.controller("voteController", function($scope){
   $scope.upVote = function(){
-    $scope.vote++;
+    $scope.post.vote++;
   }
   $scope.downVote = function(){
-    $scope.vote--;
+    $scope.post.vote--;
   }
-  $scope.vote = 0;
+  $scope.post.vote = 0;
 })
