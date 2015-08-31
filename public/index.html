@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="redditApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body ng-controller="redditController">
+<header>
+  <nav>
+    <h1>Reddit Clone</h1>
+    <p><a href="" ng-click="addPost = ! addPost"><i class="fa fa-plus"></i> Add Post</a></p>
+    <input type="search" ng-model="search" placeholder="Search">
+
+    <select ng-model="sort" ng-init="sort = '-vote'">
+      <option value="-vote">Sort By Votes</option>
+      <option value="-date">Sort By Date</option>
+      <option value="title">Sort By Title</option>
+    </select>
+  </nav>
+</header>
+    <form ng-show="addPost" class="submitPostDiv" name="form" novalidate>
+      <label for="title">Title</label><br><br>
+      <input type="text" name="title" ng-model="title" placeholder="Title" required>
+      <br>
+      <br>
+      <label for="author">Author</label> <br><br>
+      <input type="text" name="author" ng-model="author" placeholder="Author" required>
+      <br>
+      <br>
+      <label for="url">Image URL</label> <br><br>
+      <input type="url" name="img" ng-model="image" placeholder="Image URL" required>
+      <br>
+      <br>
+      <label for="description">Description</label><br><br>
+      <input type="textarea" name="description" ng-model="description" placeholder="Description" required>
+      <br>
+      <br>
+      <input class="submit" ng-disabled="form.$invalid" type="submit" ng-click="addPosts(); addPost = false;" value="Add Post">
+    </form>
+
+  <main ng-repeat="post in posts | filter:search | orderBy: sort">
+    <div class="posts">
+      <br>
+      <div class="column1">
+      <img style="max-width:200px" src="{{post.image}}" alt="">
+      </div>
+      <div class="column2">
+        <div ng-controller="voteController">
+          <h2>{{post.title}}  |  <i ng-click="upVote()" class="fa fa-arrow-up" style='cursor:pointer'></i><i ng-click="downVote()" class="fa fa-arrow-down" style='cursor:pointer'></i><span ng-class="{green: post.vote>0, red:post.vote<0}"> {{post.vote}}</span></h2>
+        </div>
+      <h4>{{post.author}}</h4>
+      <p>{{post.description}}</p>
+      <br>
+      <br>
+        <div ng-controller="commentController">
+          <footer>
+            <span><i class="fa fa-calendar"></i>
+               <time title="{{ post.date | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}">{{ post.date | amCalendar }}</time></span>  |
+            <span><i class="fa fa-commenting">
+            </i> <a href="" ng-click="showComments = ! showComments">
+              <ng-pluralize count="commentsList.length"
+                    when="{1: '1 comment',
+                      other: '{} comments'}"></ng-pluralize>
+            </a></span>  |
+            <span> <i class="fa fa-pencil"></i> <a href="" ng-click="addComment = ! addComment">Add a comment</a></span>
+          </footer>
+
+          <form ng-init="addComment=false" ng-show="addComment" name="form" novalidate>
+            <label for="commentAuthor">Author</label>
+            <input class="form2" type="text" ng-model="commentAuthor" placeholder="Author" required>
+            <br>
+            <br>
+            <label for="commentText">Text</label>
+            <input class="form2" type="text" ng-model="commentText" placeholder="comment text" required>
+            <br>
+            <br>
+            <input class="submit2" type="submit"  ng-disabled="form.$invalid" ng-click="addComments(); addComment = false; showComments = true" name="submit" value="Add Comment">
+          </form>
+
+          <div class="comments" ng-repeat="comment in commentsList" ng-show="showComments">
+            <p><b>{{comment.commentAuthor}}</b> {{comment.commentText}}</p>
+          </div>
+            <br>
+      </div>
+      </div>
+
+     </div>
+    </div>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-animate.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/0.10.1/angular-moment.min.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
